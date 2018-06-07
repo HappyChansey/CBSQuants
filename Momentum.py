@@ -16,7 +16,72 @@ Indices = Indices.iloc[:,1:len(Indices.columns)]
 StartDate = datetime.strptime('2001-01-01', '%Y-%m-%d')
 EndDate = datetime.strptime(Indices.index[-1], '%Y-%m-%d')
 
-Principal = 100
+Principal = 10000
+
+for i in range(0, len(Indices.index), 1):
+
+        if datetime.strptime(Indices.index[i], '%Y-%m-%d')<StartDate:
+            ind = i
+        else:
+            break
+
+Value = []
+ValueSPY = []
+Value.append(Principal)
+ValueSPY.append(Principal)
+
+Option = []
+MonthlyReturn = []
+
+Time = []
+Time.append(StartDate)
+
+while ind < len(Indices.index)-1:
+
+
+    Momentum_SP500 = (Indices.iloc[ind,0]/Indices.iloc[ind-6,0]-1)/3+(Indices.iloc[ind,0]/Indices.iloc[ind-3,0]-1)/3+(Indices.iloc[ind,0]/Indices.iloc[ind-1,0]-1)/3
+
+    Momentum_SmallCap = (Indices.iloc[ind,1]/Indices.iloc[ind-6,1]-1)/3+(Indices.iloc[ind,1]/Indices.iloc[ind-3,1]-1)/3+(Indices.iloc[ind,1]/Indices.iloc[ind-1,1]-1)/3
+
+
+    if Momentum_SP500 > Momentum_SmallCap:
+        if Momentum_SP500 > 0:
+            option = 0
+        else:
+            option = 2
+    else:
+        if Momentum_SmallCap > 0:
+            option = 1
+        else:
+            option = 2
+
+    Option.append(option)
+
+    # Backtest
+
+
+    ind = ind+1
+
+    Value.append(Value[-1]*Indices.iloc[ind,option]/Indices.iloc[ind-1,option])
+    ValueSPY.append(ValueSPY[-1]*Indices.iloc[ind,0]/Indices.iloc[ind-1,0])
+
+    Time.append(datetime.strptime(Indices.index[ind], '%Y-%m-%d'))
+
+    MonthlyReturn.append(Indices.iloc[ind,0]/Indices.iloc[ind-1,0]-1)
+
+plt.plot(Time, Value, Time, ValueSPY)
+plt.xlabel('Time')
+plt.ylabel('Value')
+# plt.yscale('log')
+plt.show()
+
+print(ValueSPY[-2])
+print(Value[-2])
+
+dfghjkl
+
+
+
 
 Interval_End = StartDate
 Interval_Begin1 = Interval_End - relativedelta(months=1)
@@ -26,6 +91,7 @@ Interval_Begin6 = Interval_End - relativedelta(months=6)
 RebaInterval = 1
 
 Value = []
+Option = []
 Value.append(Principal)
 
 Time = []
@@ -48,9 +114,9 @@ while Interval_End < EndDate:
             break
 
 
-    Momentum_SP500 = (Indices.iloc[ind_end,0]/Indices.iloc[ind_6,0]-1)/6+(Indices.iloc[ind_end,0]/Indices.iloc[ind_3,0]-1)/3+(Indices.iloc[ind_end,0]/Indices.iloc[ind_1,0]-1)
+    Momentum_SP500 = (Indices.iloc[ind_end,0]/Indices.iloc[ind_6,0]-1)/3+(Indices.iloc[ind_end,0]/Indices.iloc[ind_3,0]-1)/3+(Indices.iloc[ind_end,0]/Indices.iloc[ind_1,0]-1)/3
 
-    Momentum_SmallCap = (Indices.iloc[ind_end,1]/Indices.iloc[ind_6,1]-1)/6+(Indices.iloc[ind_end,1]/Indices.iloc[ind_3,1]-1)/3+(Indices.iloc[ind_end,1]/Indices.iloc[ind_1,1]-1)
+    Momentum_SmallCap = (Indices.iloc[ind_end,1]/Indices.iloc[ind_6,1]-1)/3+(Indices.iloc[ind_end,1]/Indices.iloc[ind_3,1]-1)/3+(Indices.iloc[ind_end,1]/Indices.iloc[ind_1,1]-1)/3
 
 
     if Momentum_SP500 > Momentum_SmallCap:
@@ -64,6 +130,7 @@ while Interval_End < EndDate:
         else:
             option = 2
 
+    Option.append(option)
     # Backtest
 
     for i in range(0, len(Indices.index), 1):
@@ -102,10 +169,10 @@ plt.show()
 Time1 = Time
 Value1 = Value
 
-StartDate = datetime.strptime('2001-01-02', '%Y-%m-%d')
+StartDate = datetime.strptime('2001-01-01', '%Y-%m-%d')
 EndDate = datetime.strptime(Indices.index[-1], '%Y-%m-%d')
 
-Principal = 100
+Principal = 10000
 
 Interval_End = StartDate
 Interval_Begin1 = Interval_End - relativedelta(months=1)
@@ -137,9 +204,9 @@ while Interval_End < EndDate:
             break
 
 
-    Momentum_SP500 = (Indices.iloc[ind_end,0]/Indices.iloc[ind_6,0]-1)/6+(Indices.iloc[ind_end,0]/Indices.iloc[ind_3,0]-1)/3+(Indices.iloc[ind_end,0]/Indices.iloc[ind_1,0]-1)
+    Momentum_SP500 = (Indices.iloc[ind_end,0]/Indices.iloc[ind_6,0]-1)+(Indices.iloc[ind_end,0]/Indices.iloc[ind_3,0]-1)+(Indices.iloc[ind_end,0]/Indices.iloc[ind_1,0]-1)
 
-    Momentum_SmallCap = (Indices.iloc[ind_end,1]/Indices.iloc[ind_6,1]-1)/6+(Indices.iloc[ind_end,1]/Indices.iloc[ind_3,1]-1)/3+(Indices.iloc[ind_end,1]/Indices.iloc[ind_1,1]-1)
+    Momentum_SmallCap = (Indices.iloc[ind_end,1]/Indices.iloc[ind_6,1]-1)+(Indices.iloc[ind_end,1]/Indices.iloc[ind_3,1]-1)+(Indices.iloc[ind_end,1]/Indices.iloc[ind_1,1]-1)
 
 
     if Momentum_SP500 > Momentum_SmallCap:
@@ -152,7 +219,7 @@ while Interval_End < EndDate:
             option = 1
         else:
             option = 2
- 
+
     # Backtest
 
     for i in range(0, len(Indices.index), 1):
@@ -174,8 +241,11 @@ while Interval_End < EndDate:
 plt.plot(Time, Value, Time1, Value1)
 plt.xlabel('Time')
 plt.ylabel('Value')
+# plt.yscale('log')
 plt.show()
 
+print(Value[-1])
+print(Option)
 
 AnnualValue = []
 AnnualValue.append(Principal)

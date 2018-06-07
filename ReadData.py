@@ -10,9 +10,10 @@ ts = TimeSeries(key='XAU63L4PGEZMXFRE', output_format='pandas')
 for i in range(0, len(Ticker), 1):
 
     ts = TimeSeries(key='XAU63L4PGEZMXFRE', output_format='pandas')
-    data, meta_data = ts.get_daily(symbol=Ticker[i], outputsize='full')
+    # data, meta_data = ts.get_daily(symbol=Ticker[i], outputsize='full')
+    data, meta_data = ts.get_monthly_adjusted(symbol=Ticker[i])
 
-    res = data.iloc[:,3]
+    res = data.iloc[:,4]
     res = res.to_frame()
     res.columns = [Ticker[i]]
 
